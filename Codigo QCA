@@ -1,0 +1,109 @@
+library(readxl)
+> list.files()
+[69] "qca Ilsse .xlsx"                                                                
+> datos<-read_excel("qca Ilsse .xlsx")
+> View(datos)
+> install.packages("QCA")
+Restarting R session...> install.packages("QCA")
+WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+ 
+https://cran.rstudio.com/bin/windows/Rtools/
+Installing package into ‘C:/Users/bodes/AppData/Local/R/win-library/4.5’
+(as ‘lib’ is unspecified)
+probando la URL 'https://cran.rstudio.com/bin/windows/contrib/4.5/QCA_3.25.zip'
+Content type 'application/zip' length 777279 bytes (759 KB)
+downloaded 759 KB
+ 
+package ‘QCA’ successfully unpacked and MD5 sums checked
+Aviso: cannot remove prior installation of package ‘QCA’
+Aviso: restored ‘QCA’
+ 
+The downloaded binary packages are in
+​C:\Users\bodes\AppData\Local\Temp\RtmpSu4aBP\downloaded_packages
+> install.packages("SetMethods")
+WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+ 
+https://cran.rstudio.com/bin/windows/Rtools/
+Installing package into ‘C:/Users/bodes/AppData/Local/R/win-library/4.5’
+(as ‘lib’ is unspecified)probando la URL 'https://cran.rstudio.com/bin/windows/contrib/4.5/SetMethods_4.1.zip'
+Content type 'application/zip' length 552423 bytes (539 KB)
+downloaded 539 KB
+ 
+package ‘SetMethods’ successfully unpacked and MD5 sums checked
+ 
+The downloaded binary packages are in
+​C:\Users\bodes\AppData\Local\Temp\RtmpSu4aBP\downloaded_packages
+Aviso:
+In file.copy(savedcopy, lib, recursive = TRUE) :
+ problema al copiar C:\Users\bodes\AppData\Local\R\win-library\4.5\00LOCK\QCA\libs\x64\QCA.dll  a C:\Users\bodes\AppData\Local\R\win-library\4.5\QCA\libs\x64\QCA.dll: Permission denied
+> library(SetMethods)
+Cargando paquete requerido: QCA
+Cargando paquete requerido: admisc
+ 
+To cite package QCA in publications, please use:
+ Dusa, Adrian (2019) QCA with R. A Comprehensive Resource.
+ Springer International Publishing.
+ 
+Cargando paquete requerido: ggplot2
+Cargando paquete requerido: ggrepel
+Cargando paquete requerido: stargazer
+ 
+Please cite as:
+ 
+Hlavac, Marek (2022). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+R package version 5.2.3. https://CRAN.R-project.org/package=stargazer
+ 
+ 
+ 
+ To cite package SetMethods in publications use:
+ 
+ Oana, Ioana-Elena and Carsten Q. Schneider. 2018. SetMethods: An Add-on R Package for
+ Advanced QCA. The R Journal 10(1): 507-33. https://journal.r-project.org/archive/2018/RJ-2018-031/index.html
+ 
+ > library(QCA)
+> summary(datos)
+      A             B             C         Resultados
+Min.   :0.0   Min.   :0.0   Min.   :0.0   Min.   :0.0  
+1st Qu.:0.0   1st Qu.:0.0   1st Qu.:0.0   1st Qu.:0.0  
+Median :1.0   Median :1.0   Median :1.0   Median :0.5  
+Mean   :0.6   Mean   :0.6   Mean   :0.6   Mean   :0.5  
+3rd Qu.:1.0   3rd Qu.:1.0   3rd Qu.:1.0   3rd Qu.:1.0  
+Max.   :1.0   Max.   :1.0   Max.   :1.0   Max.   :1.0  
+> tv <- truthTable(data = datos, outcome = "Resultados", conditions = c("A,B,C"), incl.cut= 1, complete=TRUE)
+> tv
+ 
+ OUT: output value
+   n: number of cases in configuration
+incl: sufficiency inclusion score
+ PRI: proportional reduction in inconsistency
+ 
+   A  B  C    OUT    n  incl  PRI  
+1   0  0  0     0     1  0.000 0.000
+2   0  0  1     0     2  0.000 0.000
+3   0  1  0     0     2  0.000 0.000
+4   0  1  1     1     3  1.000 1.000
+5   1  0  0     0     2  0.000 0.000
+6   1  0  1     0     3  0.000 0.000
+7   1  1  0     1     3  1.000 1.000
+8   1  1  1     1     4  1.000 1.000
+ 
+> # Condiciones Necesarias
+> QCAfit(x = datos[, c("A", "B", "C")], y = datos$Resultados, necessity = TRUE)
+  Cons.Nec Cov.Nec   RoN
+A       0.7   0.583 0.615
+B       1.0   0.833 0.800
+C       0.7   0.583 0.615
+~A      0.3   0.375 0.706
+~B      0.0   0.000 0.600
+~C      0.3   0.375 0.706
+> # Minimización Booleana
+> minimize(input = tv, include = "all", details = TRUE)
+ 
+M1: A*B + B*C <-> Resultados
+ 
+       inclS   PRI   covS   covU  
+----------------------------------
+1  A*B  1.000  1.000  0.700  0.300
+2  B*C  1.000  1.000  0.700  0.300
+----------------------------------
+   M1  1.000  1.000  1.000
